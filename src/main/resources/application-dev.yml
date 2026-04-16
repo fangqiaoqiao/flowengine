@@ -1,0 +1,22 @@
+server:
+  port: 10085
+
+spring:
+  application:
+    name: agile-flowengine  # 网关服务名
+  cloud:
+    zookeeper:
+      connect-string: 192.168.2.151:2181  # ZK地址:cite[8]
+      session-timeout: 150000 # 单位毫秒，建议设置为15000（15秒）
+      connection-timeout: 100000 # 单位毫秒，建议设置为10000（10秒）
+      discovery:
+        enabled: true
+        prefer-ip-address: true
+        ip-address: ${spring.cloud.client.ip-address}
+
+business:
+  workspace:
+    root: H:/program/testData/flowengine/
+    serv:
+      mapping: mapping
+      demo-out-param: demoOutParam
