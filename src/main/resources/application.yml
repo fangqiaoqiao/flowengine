@@ -1,22 +1,64 @@
-server:
-  port: 10085
-
 spring:
   application:
-    name: agile-flowengine  # 网关服务名
-  cloud:
-    zookeeper:
-      connect-string: ${SPRING_ZOOKEEPER_CONNECT:localhost}:2181  # ZK地址:cite[8]
-      session-timeout: 150000 # 单位毫秒，建议设置为15000（15秒）
-      connection-timeout: 100000 # 单位毫秒，建议设置为10000（10秒）
-      discovery:
-        enabled: true
-        prefer-ip-address: true
-        ip-address: ${spring.cloud.client.ip-address}
+    name: flowengine
+  datasource:
+    url: jdbc:oracle:thin:@192.168.2.229:1521:xe
+    username: paper
+    password: abc123
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    database: ORACLE
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle12cDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+  redis:
+    host: redis-cache
+    port: 6379
+    password: abc123
+    database: 0
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
 
-business:
-  workspace:
-    root: /home/fqq/myproject/flowengine/data/
-    serv:
-      mapping: mapping
-      demo-out-param: demoOutParam
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+
+logging:
+  level:
+    com.fqq.flowengine: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# 自定义业务配置
+flowengine:
+  context:
+    expire-seconds: 1800
+  keyid:
+    expire-seconds: 1800
+  processor:
+    http:
+      connect-timeout: 5000
+      read-timeout: 10000

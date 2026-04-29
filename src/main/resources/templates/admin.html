@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FlowEngine 管理后台 - Thymeleaf</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<div class="container">
+    <header><h1>FlowEngine 管理后台</h1></header>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="component">组件管理</button>
+        <button class="tab-btn" data-tab="node">环节管理</button>
+        <button class="tab-btn" data-tab="param">参数管理</button>
+    </div>
+    <div id="component-tab" class="tab-content active">
+        <div class="toolbar"><button id="add-component-btn">新增组件</button></div>
+        <table id="component-table"><thead><tr><th>ID</th><th>组件ID</th><th>名称</th><th>描述</th><th>操作</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div id="node-tab" class="tab-content">
+        <div class="filter-bar"><label>选择组件：</label><select id="component-select"></select></div>
+        <div class="toolbar"><button id="add-node-btn" disabled>新增环节</button></div>
+        <table id="node-table"><thead><tr><th>ID</th><th>环节ID</th><th>环节名称</th><th>顺序</th><th>处理器类型</th><th>配置</th><th>操作</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div id="param-tab" class="tab-content">
+        <div class="filter-bar"><label>选择环节：</label><select id="node-select"></select></div>
+        <div class="sub-tabs"><button class="sub-tab-btn active" data-subtab="input">入参配置</button><button class="sub-tab-btn" data-subtab="output">出参配置</button></div>
+        <div id="input-param-panel" class="sub-tab-content active"><div class="toolbar"><button id="add-input-btn">新增入参</button></div><table id="input-param-table"><thead><tr><th>参数名</th><th>来源</th><th>表达式</th><th>必填</th><th>操作</th></tr></thead><tbody></tbody></table></div>
+        <div id="output-param-panel" class="sub-tab-content"><div class="toolbar"><button id="add-output-btn">新增出参</button></div><table id="output-param-table"><thead><tr><th>参数名</th><th>值表达式</th><th>操作</th></tr></thead><tbody></tbody></table></div>
+    </div>
+</div>
+<div id="modal" class="modal"><div class="modal-content"><span class="close">&times;</span><div id="modal-body"></div></div></div>
+<script src="/js/common.js"></script>
+<script src="/js/component.js"></script>
+<script src="/js/node.js"></script>
+<script src="/js/param.js"></script>
+<script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (tabId === 'component') loadComponents();
+            else if (tabId === 'node') loadComponentsForSelect();
+            else if (tabId === 'param') loadNodesForSelect();
+        });
+    });
+    loadComponents();
+</script>
+</body>
+</html>
